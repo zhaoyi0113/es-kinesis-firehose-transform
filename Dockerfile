@@ -6,6 +6,6 @@ COPY . .
 
 RUN yarn install --frozen-lockfile
 
-EXPOSE 8083
+EXPOSE 8080
 
 CMD [ "node", "index.js" ]
