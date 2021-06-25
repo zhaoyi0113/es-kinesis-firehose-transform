@@ -9,6 +9,6 @@ app.post('/', cors(), function (req, res, next) {
   res.status(200).send();
 });
 
-app.listen(8080, function () {
-  console.log('CORS-enabled web server listening on port 8080');
+app.listen(port, '0.0.0.0', () => {
+  console.log(`CORS-enabled web server listening on port ${port}`);
 });
