@@ -12,7 +12,7 @@ app.use(bodyParser.urlencoded({
 app.use(bodyParser.json({limit: '50mb'}));
 
 app.post('/', cors(), function (req, res) {
-  console.log('get a request:', req);
+  console.log('get a request:', JSON.stringify(req.body));
   res.status(200).send();
 });
 
