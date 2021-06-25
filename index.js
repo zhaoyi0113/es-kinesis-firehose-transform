@@ -6,7 +6,7 @@ const port = 8080;
 
 app.post('/', cors(), function (req, res, next) {
   console.log('get a request:', req);
-  res.status(200);
+  res.status(200).send();
 });
 
 app.listen(8080, function () {
