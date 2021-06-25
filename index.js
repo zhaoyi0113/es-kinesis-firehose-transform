@@ -15,7 +15,7 @@ app.post('/', cors(), function (req, res) {
   console.log('get a request:');
   const records = req.body.records.map(record => new Buffer(record.data).toString('base64'));
   console.log('records:', records);
-  res.sendStatus(200);
+  res.json({requestId: req.requestId, timestamp: req.timestamp});
 });
 
 app.listen(port, '0.0.0.0', () => {
