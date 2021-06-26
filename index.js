@@ -13,7 +13,7 @@ app.use(bodyParser.json({limit: '50mb'}));
 
 app.post('/', cors(), function (req, res) {
   console.log('get a request:');
-  const records = req.body.records.map(record => new Buffer(record.data).toString('base64'));
+  const records = req.body.records.map(record => Buffer.from(record.data, 'base64').toString('utf-8'));
   console.log('records:', records);
   res.json({requestId: req.requestId, timestamp: req.timestamp});
 });
