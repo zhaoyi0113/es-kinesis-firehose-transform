@@ -20,8 +20,9 @@ app.use(
 app.use(bodyParser.json({ limit: '50mb' }));
 
 const processRecords = async (req, res, type) => {
+	console.log('req:', req);
   const today = new Date();
-  const index = `${type}-${today.getFullYear()}-${today.getMonth()}-${today.getDate()}`;
+  const index = `aws-${type}-${today.getFullYear()}-${today.getMonth()}-${today.getDate()}`;
 
   const records = [];
   req.body.records.forEach((record) => {
@@ -30,9 +31,9 @@ const processRecords = async (req, res, type) => {
       .split('\n')
       .forEach((d) => {
         try {
-          JSON.parse(d);
+          const j = JSON.parse(d);
           records.push({ index: { _index: index } });
-          records.push(JSON.parse(d));
+          records.push(j);
         } catch (err) {}
       });
   });
