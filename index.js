@@ -35,7 +35,7 @@ const processRecords = async (req, res, type) => {
   }
   try {
     await axios.post(url, data, {
-      headers: { ContentType: 'application/json' },
+      headers: { 'Content-Type': 'application/json' },
     });
   } catch (err) {
     console.error('send to es error:', err);
