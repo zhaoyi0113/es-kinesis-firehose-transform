@@ -21,7 +21,13 @@ app.use(bodyParser.json({ limit: '50mb' }));
 
 const processRecords = async (req, res, type) => {
   console.log('get a request:', req.body.records);
-  const records = req.body.records.map((record) => JSON.parse(Buffer.from(record.data, 'base64').toString('utf-8')));
+  const records = [];
+  req.body.records.forEach((record) => {
+    Buffer.from(record.data, 'base64')
+      .toString('utf-8')
+      .split('\n')
+      .forEach((d) => records.push(JSON.parse(d)));
+  });
   console.log('records:', records);
 
   // let data = '';
