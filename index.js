@@ -1,10 +1,13 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const cors = require('cors');
-const { default: axios } = require('axios');
+const { Client } = require('@elastic/elasticsearch');
 
 const ES_ENDPOINT = 'http://es-entrypoint:9200';
 
+const esclient = new Client({
+  node: ES_ENDPOINT,
+});
 let app = express();
 
 const port = 8080;
@@ -21,21 +24,23 @@ const processRecords = async (req, res, type) => {
   const records = req.body.records.map((record) => Buffer.from(record.data, 'base64').toString('utf-8'));
   console.log('records:', records);
 
-  let data = '';
-  records.forEach((record) => (data += JSON.stringify(record)));
+  // let data = '';
+  // records.forEach((record) => (data += JSON.stringify(record)));
   const today = new Date();
   const index = `${type}-${today.getFullYear()}-${today.getMonth()}-${today.getDate()}`;
 
-  const url = `${ES_ENDPOINT}/${index}/_bulk`;
-  console.log('send to es:', url, data);
+  console.log('send to es:', url);
   try {
-    await axios.put(`${ES_ENDPOINT}/${index}`);
+    await esclient.indices.create({
+      index,
+    });
   } catch (err) {
     console.error('create index error:', err);
   }
   try {
-    await axios.post(url, data, {
-      headers: { 'Content-Type': 'application/json' },
+    await esclient.bulk({
+      index,
+      body: records,
     });
   } catch (err) {
     console.error('send to es error:', err);
