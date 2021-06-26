@@ -20,6 +20,9 @@ app.use(
 app.use(bodyParser.json({ limit: '50mb' }));
 
 const processRecords = async (req, res, type) => {
+  const today = new Date();
+  const index = `${type}-${today.getFullYear()}-${today.getMonth()}-${today.getDate()}`;
+
   const records = [];
   req.body.records.forEach((record) => {
     Buffer.from(record.data, 'base64')
@@ -27,19 +30,16 @@ const processRecords = async (req, res, type) => {
       .split('\n')
       .forEach((d) => {
         try {
-          records.push(JSON.parse(d));
-        } catch (err) {
-          console.error('failed to parse ', d);
-        }
+          JSON.parse(d);
+        } catch (err) {}
+        records.push({ index: { _index: index } });
+        records.push(JSON.parse(d));
       });
   });
   console.log('records:', records);
 
   // let data = '';
   // records.forEach((record) => (data += JSON.stringify(record)));
-  const today = new Date();
-  const index = `${type}-${today.getFullYear()}-${today.getMonth()}-${today.getDate()}`;
-
   try {
     await esclient.indices.create({
       index,
