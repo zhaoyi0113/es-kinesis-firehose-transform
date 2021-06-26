@@ -24,7 +24,7 @@ const processRecords = async (req, res, type) => {
   let data = '';
   records.forEach((record) => (data += JSON.stringify(record)));
   const today = new Date();
-  const index = `${type}-${today.getFullYear()}-${today.getMonth()}-${today.getDate()}}`;
+  const index = `${type}-${today.getFullYear()}-${today.getMonth()}-${today.getDate()}`;
 
   const url = `${ES_ENDPOINT}/${index}/_bulk`;
   console.log('send to es:', url, data);
