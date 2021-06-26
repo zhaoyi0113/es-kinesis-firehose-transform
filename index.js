@@ -31,9 +31,9 @@ const processRecords = async (req, res, type) => {
       .forEach((d) => {
         try {
           JSON.parse(d);
+          records.push({ index: { _index: index } });
+          records.push(JSON.parse(d));
         } catch (err) {}
-        records.push({ index: { _index: index } });
-        records.push(JSON.parse(d));
       });
   });
   console.log('records:', records);
