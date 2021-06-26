@@ -28,9 +28,18 @@ const processRecords = async (req, res, type) => {
 
   const url = `${ES_ENDPOINT}/${index}/_bulk`;
   console.log('send to es:', url, data);
-  axios.post(url, data, {
-    headers: { ContentType: 'application/json' },
-  });
+  try {
+    await axios.put(`${ES_ENDPOINT}/${index}`);
+  } catch (err) {
+    console.error('create index error:', err);
+  }
+  try {
+    await axios.post(url, data, {
+      headers: { ContentType: 'application/json' },
+    });
+  } catch (err) {
+    console.error('send to es error:', err);
+  }
   res.set({
     'X-Amz-Firehose-Protocol-Version': '1.0',
     'X-Amz-Firehose-Request-Id': req.requestId,
