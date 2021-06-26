@@ -15,11 +15,18 @@ const processRecords = (req, res, type) => {
 	console.log('get a request:');
   const records = req.body.records.map(record => Buffer.from(record.data, 'base64').toString('utf-8'));
   console.log('records:', records);
+
+	const today = new Date();
+	const index = `${type}-${today.getFullYear()}-${today.getMonth()}-${today.getDate()}}`;
+
+
+
 	res.set({
 		'X-Amz-Firehose-Protocol-Version': '1.0',
 		'X-Amz-Firehose-Request-Id': req.requestId,
 		'Content-Type': 'application/json',
 	})
+	console.log('response:', {requestId: req.requestId, timestamp: req.timestamp});
   res.json({requestId: req.requestId, timestamp: req.timestamp});
 };
 
