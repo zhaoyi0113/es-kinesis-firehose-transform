@@ -29,7 +29,6 @@ const processRecords = async (req, res, type) => {
   const today = new Date();
   const index = `${type}-${today.getFullYear()}-${today.getMonth()}-${today.getDate()}`;
 
-  console.log('send to es:', url);
   try {
     await esclient.indices.create({
       index,
