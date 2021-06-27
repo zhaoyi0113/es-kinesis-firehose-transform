@@ -20,7 +20,7 @@ app.use(
 app.use(bodyParser.json({ limit: '50mb' }));
 
 const processRecords = async (req, res, type) => {
-	console.log('req:', req);
+	console.log('req:', JSON.stringify(req.body));
   const today = new Date();
   const index = `aws-${type}-${today.getFullYear()}-${today.getMonth()}-${today.getDate()}`;
 
