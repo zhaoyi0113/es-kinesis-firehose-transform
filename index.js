@@ -58,7 +58,7 @@ const processRecords = async (req, res, type) => {
       });
 		}
   } catch (err) {
-    // console.error('create index error:', err);
+    console.error('create index error:', err);
   }
   try {
     console.log('send ', records.length, ' documents.');
