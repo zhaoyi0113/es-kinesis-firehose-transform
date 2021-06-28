@@ -20,12 +20,12 @@ app.use(
 app.use(bodyParser.json({ limit: '50mb' }));
 
 const processRecords = async (req, res, type) => {
-  if(type === 'metrics'){
+  if (type === 'metrics') {
     console.log('req:', type, req.body.requestId, req.body.timestmap);
-  }else{
+  } else {
     console.log('req:', type, req.body);
   }
-	const response = { requestId: req.body.requestId, timestamp: req.body.timestamp };
+  const response = { requestId: req.body.requestId, timestamp: req.body.timestamp };
   const today = new Date();
   const index = `aws-${type}-${today.getFullYear()}-${today.getMonth() + 1}-${today.getDate()}`;
 
@@ -43,9 +43,9 @@ const processRecords = async (req, res, type) => {
       });
   });
 
-	if(records.length === 0) {
-		return response;
-	}
+  if (records.length === 0) {
+    return response;
+  }
 
   // let data = '';
   // records.forEach((record) => (data += JSON.stringify(record)));
