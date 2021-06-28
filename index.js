@@ -25,6 +25,7 @@ const processRecords = async (req, res, type) => {
   }else{
     console.log('req:', type, req);
   }
+	const response = { requestId: req.body.requestId, timestamp: req.body.timestamp };
   const today = new Date();
   const index = `aws-${type}-${today.getFullYear()}-${today.getMonth() + 1}-${today.getDate()}`;
 
@@ -41,6 +42,10 @@ const processRecords = async (req, res, type) => {
         } catch (err) {}
       });
   });
+
+	if(records.length === 0) {
+		return response;
+	}
 
   // let data = '';
   // records.forEach((record) => (data += JSON.stringify(record)));
@@ -77,8 +82,8 @@ const processRecords = async (req, res, type) => {
     'X-Amz-Firehose-Request-Id': req.requestId,
     'Content-Type': 'application/json',
   });
-  console.log('response:', { requestId: req.body.requestId, timestamp: req.body.timestamp });
-  res.json({ requestId: req.body.requestId, timestamp: req.body.timestamp });
+  console.log('response:', response);
+  res.json(response);
 };
 
 app.post('/logs', cors(), (req, res) => processRecords(req, res, 'logs'));
