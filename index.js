@@ -20,10 +20,10 @@ app.use(
 app.use(bodyParser.json({ limit: '50mb' }));
 
 const processRecords = async (req, res, type) => {
-	// console.log('req:', JSON.stringify(req.body));
-	console.log('req:', req.body.requestId, req.body.timestmap);
+  // console.log('req:', JSON.stringify(req.body));
+  console.log('req:', req.body.requestId, req.body.timestmap);
   const today = new Date();
-  const index = `aws-${type}-${today.getFullYear()}-${today.getMonth()}-${today.getDate()}`;
+  const index = `aws-${type}-${today.getFullYear()}-${today.getMonth() + 1}-${today.getDate()}`;
 
   const records = [];
   req.body.records.forEach((record) => {
@@ -43,7 +43,7 @@ const processRecords = async (req, res, type) => {
   // let data = '';
   // records.forEach((record) => (data += JSON.stringify(record)));
   try {
-		console.log('create index ', index);
+    console.log('create index ', index);
     await esclient.indices.create({
       index,
     });
@@ -51,7 +51,7 @@ const processRecords = async (req, res, type) => {
     // console.error('create index error:', err);
   }
   try {
-		console.log('send ', records.length, ' documents.');
+    console.log('send ', records.length, ' documents.');
     await esclient.bulk({
       index,
       body: records,
@@ -64,7 +64,7 @@ const processRecords = async (req, res, type) => {
     'X-Amz-Firehose-Request-Id': req.requestId,
     'Content-Type': 'application/json',
   });
-  console.log('response:',{ requestId: req.body.requestId, timestamp: req.body.timestamp });
+  console.log('response:', { requestId: req.body.requestId, timestamp: req.body.timestamp });
   res.json({ requestId: req.body.requestId, timestamp: req.body.timestamp });
 };
 
