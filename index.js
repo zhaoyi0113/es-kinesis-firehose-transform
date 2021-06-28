@@ -34,11 +34,10 @@ const processRecords = async (req, res, type) => {
         try {
           const j = JSON.parse(d);
           records.push({ index: { _index: index } });
-          records.push({...j, '@timestamp': new Date(d.timestamp).toISOString()});
+          records.push({ ...j, '@timestamp': new Date(d.timestamp).toISOString() });
         } catch (err) {}
       });
   });
-  // console.log('records:', records);
 
   // let data = '';
   // records.forEach((record) => (data += JSON.stringify(record)));
@@ -52,6 +51,7 @@ const processRecords = async (req, res, type) => {
   }
   try {
     console.log('send ', records.length, ' documents.');
+    console.log('records:', records[0], records[1]);
     await esclient.bulk({
       index,
       body: records,
