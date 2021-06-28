@@ -62,7 +62,7 @@ const processRecords = async (req, res, type) => {
     'Content-Type': 'application/json',
   });
   console.log('response:', { requestId: req.requestId, timestamp: req.timestamp });
-  res.json({ requestId: req.requestId, timestamp: req.timestamp });
+  res.json({ requestId: req.body.requestId, timestamp: req.body.timestamp });
 };
 
 app.post('/logs', cors(), (req, res) => processRecords(req, res, 'logs'));
