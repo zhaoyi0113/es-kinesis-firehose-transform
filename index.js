@@ -42,10 +42,21 @@ const processRecords = async (req, res, type) => {
   // let data = '';
   // records.forEach((record) => (data += JSON.stringify(record)));
   try {
-    console.log('create index ', index);
-    await esclient.indices.create({
+    const { body } = await client.exists({
       index,
+      id: 1,
     });
+		console.log('index exists:', body);
+    if (!body) {
+      console.log('create index ', index);
+      await esclient.indices.create({
+        index,
+      });
+      await esclient.indices.putMapping({
+        index,
+        body: { properties: { timestamp: { type: 'date' } } },
+      });
+		}
   } catch (err) {
     // console.error('create index error:', err);
   }
