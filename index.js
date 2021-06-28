@@ -34,7 +34,7 @@ const processRecords = async (req, res, type) => {
         try {
           const j = JSON.parse(d);
           records.push({ index: { _index: index } });
-          records.push(j);
+          records.push({...j, '@timestamp': new Date(d.timestamp).toISOString()});
         } catch (err) {}
       });
   });
