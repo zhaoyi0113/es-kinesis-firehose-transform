@@ -23,7 +23,7 @@ const processRecords = async (req, res, type) => {
   if(type === 'metrics'){
     console.log('req:', type, req.body.requestId, req.body.timestmap);
   }else{
-    console.log('req:', type, req);
+    console.log('req:', type, req.body);
   }
 	const response = { requestId: req.body.requestId, timestamp: req.body.timestamp };
   const today = new Date();
