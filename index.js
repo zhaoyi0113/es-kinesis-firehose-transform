@@ -44,7 +44,6 @@ const processRecords = async (req, res, type) => {
   try {
     const { body } = await esclient.exists({
       index,
-      id: 1,
     });
 		console.log('index exists:', body);
     if (!body) {
