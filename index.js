@@ -42,7 +42,7 @@ const processRecords = async (req, res, type) => {
   // let data = '';
   // records.forEach((record) => (data += JSON.stringify(record)));
   try {
-    const { body } = await client.exists({
+    const { body } = await esclient.exists({
       index,
       id: 1,
     });
