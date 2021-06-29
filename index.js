@@ -1,6 +1,7 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const cors = require('cors');
+const zlib = require('zlib');
 const { Client } = require('@elastic/elasticsearch');
 
 const ES_ENDPOINT = 'http://es-entrypoint:9200';
@@ -31,20 +32,27 @@ const processRecords = async (req, res, type) => {
 
   const records = [];
   req.body.records.forEach((record) => {
-    Buffer.from(record.data, 'base64')
-      .toString('utf-8')
-      .split('\n')
-      .forEach((d) => {
-        try {
-          const j = JSON.parse(d);
-          records.push({ index: { _index: index } });
-          records.push(j);
-        } catch (err) {}
-      });
+    let str = '';
+    if (type === 'metrics') {
+      str = Buffer.from(record.data, 'base64').toString('utf-8');
+    } else if (type === 'logs') {
+      str = zlib.unzipSync(Buffer.from(record.data, 'base64')).toString('utf-8');
+    }
+    str.split('\n').forEach((d) => {
+      try {
+        const j = JSON.parse(d);
+        records.push({ index: { _index: index } });
+        records.push(j);
+      } catch (err) {
+        console.error('failed to decode record.', record);
+      }
+    });
   });
 
   if (records.length === 0) {
-    return response;
+    console.log('record lenght is 0');
+    res.json(response);
+    return;
   }
 
   // let data = '';
