@@ -40,11 +40,13 @@ const processRecords = async (req, res, type) => {
     }
     str.split('\n').forEach((d) => {
       try {
-        const j = JSON.parse(d);
-        records.push({ index: { _index: index } });
-        records.push(j);
+        if (d) {
+          const j = JSON.parse(d);
+          records.push({ index: { _index: index } });
+          records.push(j);
+        }
       } catch (err) {
-        console.error('failed to decode record.', record);
+        console.error('failed to decode record.', d);
       }
     });
   });
