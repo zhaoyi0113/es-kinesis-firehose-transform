@@ -42,8 +42,17 @@ const processRecords = async (req, res, type) => {
       try {
         if (d) {
           const j = JSON.parse(d);
-          records.push({ index: { _index: index } });
-          records.push(j);
+          if (type === 'logs') {
+            const { logEvents } = j;
+            delete j.logEvents;
+            logEvents.forEach((log) => {
+              records.push({ index: { _index: index } });
+              records.push({ ...j, ...log });
+            });
+          } else {
+            records.push({ index: { _index: index } });
+            records.push(j);
+          }
         }
       } catch (err) {
         console.error('failed to decode record.', d);
