@@ -21,11 +21,7 @@ app.use(
 app.use(bodyParser.json({ limit: '50mb' }));
 
 const processRecords = async (req, res, type) => {
-  if (type === 'metrics') {
-    console.log('req:', type, req.body.requestId, req.body.timestmap);
-  } else {
-    console.log('req:', type, req.body);
-  }
+	console.log('req:', type, req.body.requestId, req.body.timestmap);
   const response = { requestId: req.body.requestId, timestamp: req.body.timestamp };
   const today = new Date();
   const index = `aws-${type}-${today.getFullYear()}-${today.getMonth() + 1}-${today.getDate()}`;
