@@ -20,6 +20,18 @@ app.use(
 );
 app.use(bodyParser.json({ limit: '50mb' }));
 
+const formatLogMessage = (log) => {
+  let message = {data: ''};
+  if (log.message) {
+    try{
+      message = JSON.parse(log.message);
+    }catch(err){
+      message = {data: log.message}
+    }
+  }
+  return message;
+}
+
 const processRecords = async (req, res, type) => {
 	console.log('req:', type, req.body.requestId, req.body.timestmap);
   const response = { requestId: req.body.requestId, timestamp: req.body.timestamp };
@@ -42,8 +54,10 @@ const processRecords = async (req, res, type) => {
             const { logEvents } = j;
             delete j.logEvents;
             logEvents.forEach((log) => {
+              const message = formatLogMessage(log);
+              delete log.message;
               records.push({ index: { _index: index } });
-              records.push({ ...j, ...log });
+              records.push({ ...j, ...log, message });
             });
           } else {
             records.push({ index: { _index: index } });
