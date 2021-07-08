@@ -29,7 +29,7 @@ const formatLogMessage = (log) => {
       message = {data: log.message}
     }
   }
-  return message;
+  return JSON.stringify(message, null, 4);
 }
 
 const processRecords = async (req, res, type) => {
