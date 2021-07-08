@@ -21,12 +21,12 @@ app.use(
 app.use(bodyParser.json({ limit: '50mb' }));
 
 const formatLogMessage = (log) => {
-  let message = {data: ''};
+  let message = {'@message': ''};
   if (log.message) {
     try{
       message = JSON.parse(log.message);
     }catch(err){
-      message = {data: log.message}
+      message = {'@message': log.message}
     }
   }
   return JSON.stringify(message, null, 4);
