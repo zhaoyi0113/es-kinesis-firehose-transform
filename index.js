@@ -32,6 +32,31 @@ const formatLogMessage = (log) => {
   return JSON.stringify(message, null, 4);
 }
 
+const createIndex = async (esclient, index, type) => {
+  try {
+    const { body } = await esclient.indices.exists({
+      index,
+    });
+    console.log('index exists:', body);
+    if (!body) {
+      console.log('create index ', index);
+      await esclient.indices.create({
+        index,
+      });
+      const mappingProps = { timestamp: { type: 'date' } };
+      if (type === 'logs') {
+        mappingProps.logGroup = {type: 'text', fielddata: true}
+      }
+      await esclient.indices.putMapping({
+        index,
+        body: { properties: mappingProps },
+      });
+    }
+  } catch (err) {
+    console.error('create index error:', err);
+  }
+}
+
 const processRecords = async (req, res, type) => {
 	console.log('req:', type, req.body.requestId, req.body.timestmap);
   const response = { requestId: req.body.requestId, timestamp: req.body.timestamp };
@@ -76,26 +101,7 @@ const processRecords = async (req, res, type) => {
     return;
   }
 
-  // let data = '';
-  // records.forEach((record) => (data += JSON.stringify(record)));
-  try {
-    const { body } = await esclient.indices.exists({
-      index,
-    });
-    console.log('index exists:', body);
-    if (!body) {
-      console.log('create index ', index);
-      await esclient.indices.create({
-        index,
-      });
-      await esclient.indices.putMapping({
-        index,
-        body: { properties: { timestamp: { type: 'date' } } },
-      });
-    }
-  } catch (err) {
-    console.error('create index error:', err);
-  }
+  await createIndex(esclient, index, type);
   try {
     console.log('send ', records.length, ' documents.');
     console.log('records:', records[0], records[1]);
