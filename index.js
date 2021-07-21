@@ -29,7 +29,7 @@ const formatLogMessage = (log) => {
       message = {'@message': log.message}
     }
   }
-  return JSON.stringify(message, null, 4);
+  return message;
 }
 
 const createIndex = async (esclient, index, type) => {
@@ -82,7 +82,7 @@ const processRecords = async (req, res, type) => {
               const message = formatLogMessage(log);
               delete log.message;
               records.push({ index: { _index: index } });
-              records.push({ ...j, ...log, message });
+              records.push({ ...j, ...log, ...message });
             });
           } else {
             records.push({ index: { _index: index } });
