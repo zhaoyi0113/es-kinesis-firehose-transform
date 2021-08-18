@@ -1,0 +1,50 @@
+{
+  "_index" : "aws-metrics-2021-8-17",
+  "_type" : "_doc",
+  "_id" : "k9poUXsBYJhImWq5nPC2",
+  "_score" : 1.0,
+  "_source" : {
+    "metric_stream_name" : "metric-stream-elk",
+    "account_id" : "264100014405",
+    "region" : "ap-southeast-2",
+    "namespace" : "AWS/DynamoDB",
+    "metric_name" : "ReturnedRecordsCount",
+    "dimensions" : {
+      "Operation" : "GetRecords",
+      "StreamLabel" : "2021-06-18T01:12:31.851",
+      "TableName" : "dev-dms-iac-events"
+    },
+    "timestamp" : 1629158220000,
+    "value" : {
+      "count" : 121,
+      "sum" : 0,
+      "max" : 0,
+      "min" : 0
+    },
+    "unit" : "Count"
+  }
+},
+{
+  "_index" : "aws-metrics-2021-8-17",
+  "_type" : "_doc",
+  "_id" : "lNpoUXsBYJhImWq5nPC2",
+  "_score" : 1.9617059,
+  "_source" : {
+    "metric_stream_name" : "metric-stream-elk",
+    "account_id" : "264100014405",
+    "region" : "ap-southeast-2",
+    "namespace" : "AWS/DynamoDB",
+    "metric_name" : "ConsumedReadCapacityUnits",
+    "dimensions" : {
+      "TableName" : "dev-dbs-api-dynamodb-Devices"
+    },
+    "timestamp" : 1629158220000,
+    "value" : {
+      "count" : 13,
+      "sum" : 6,
+      "max" : 0.5,
+      "min" : 0
+    },
+    "unit" : "Count"
+  }
+}

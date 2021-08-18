@@ -1,0 +1,70 @@
+{
+  "@timestamp" : "2021-08-18T05:58:00.000Z",
+  "service" : {
+    "type" : "aws"
+  },
+  "agent" : {
+    "ephemeral_id" : "616927c6-e4a5-48f1-b00a-3b88ad3e4d3d",
+    "id" : "33e05c3e-f937-4b6b-9079-2b00112d585f",
+    "name" : "metricbeat-8ccb5cdc5-v9bzg",
+    "type" : "metricbeat",
+    "version" : "7.11.1",
+    "hostname" : "metricbeat-8ccb5cdc5-v9bzg"
+  },
+  "ecs" : {
+    "version" : "1.7.0"
+  },
+  "host" : {
+    "name" : "metricbeat-8ccb5cdc5-v9bzg"
+  },
+  "cloud" : {
+    "provider" : "aws",
+    "region" : "ap-southeast-2",
+    "account" : {
+      "name" : "264100014405",
+      "id" : "264100014405"
+    }
+  },
+  "aws" : {
+    "dynamodb" : {
+      "metrics" : {
+        "TimeToLiveDeletedItemCount" : {
+          "min" : 0,
+          "sum" : 5,
+          "count" : 20,
+          "avg" : 0.25,
+          "max" : 2
+        },
+        "ConsumedWriteCapacityUnits" : {
+          "max" : 0,
+          "min" : 0,
+          "sum" : 0,
+          "count" : 6,
+          "avg" : 0
+        },
+        "ConsumedReadCapacityUnits" : {
+          "min" : 0,
+          "sum" : 0,
+          "count" : 6,
+          "avg" : 0,
+          "max" : 0
+        }
+      }
+    },
+    "cloudwatch" : {
+      "namespace" : "AWS/DynamoDB"
+    },
+    "dimensions" : {
+      "TableName" : "dev-os-engine-EntityScreeningSearchTable"
+    }
+  },
+  "event" : {
+    "duration" : 82790500742,
+    "dataset" : "aws.cloudwatch",
+    "module" : "aws"
+  },
+  "metricset" : {
+    "period" : 300000,
+    "name" : "cloudwatch"
+  }
+}

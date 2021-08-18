@@ -1,0 +1,78 @@
+{
+  "_index" : "metricbeat-7.11.1-2021.07.18-000001",
+  "_type" : "_doc",
+  "_id" : "YEEVuXoBrzYKx1jK0N_K",
+  "_score" : 1.0,
+  "_source" : {
+    "@timestamp" : "2021-07-18T10:01:00.000Z",
+    "event" : {
+      "dataset" : "aws.cloudwatch",
+      "module" : "aws",
+      "duration" : 70879329236
+    },
+    "ecs" : {
+      "version" : "1.7.0"
+    },
+    "host" : {
+      "name" : "metricbeat-8ccb5cdc5-ppdp7"
+    },
+    "agent" : {
+      "ephemeral_id" : "ce5d139e-dd91-4754-8cd4-250c37d72dc0",
+      "id" : "c4945104-9493-4373-8ffb-3c0ea421e733",
+      "name" : "metricbeat-8ccb5cdc5-ppdp7",
+      "type" : "metricbeat",
+      "version" : "7.11.1",
+      "hostname" : "metricbeat-8ccb5cdc5-ppdp7"
+    },
+    "service" : {
+      "type" : "aws"
+    },
+    "cloud" : {
+      "provider" : "aws",
+      "region" : "ap-southeast-2",
+      "account" : {
+        "name" : "264100014405",
+        "id" : "264100014405"
+      }
+    },
+    "aws" : {
+      "rds" : {
+        "metrics" : {
+          "MaxDatabaseConnectionsAllowed" : {
+            "avg" : 179,
+            "max" : 179,
+            "min" : 179,
+            "sum" : 1790,
+            "count" : 10
+          },
+          "DatabaseConnections" : {
+            "avg" : 0,
+            "max" : 0,
+            "min" : 0,
+            "sum" : 0,
+            "count" : 10
+          },
+          "DatabaseConnectionsWithTLS" : {
+            "min" : 0,
+            "sum" : 0,
+            "count" : 10,
+            "avg" : 0,
+            "max" : 0
+          }
+        }
+      },
+      "cloudwatch" : {
+        "namespace" : "AWS/RDS"
+      },
+      "dimensions" : {
+        "Target" : "db:da123qluks3z85u",
+        "ProxyName" : "dev-ams-engine-aurora-dbproxy",
+        "TargetGroup" : "default"
+      }
+    },
+    "metricset" : {
+      "name" : "cloudwatch",
+      "period" : 300000
+    }
+  }
+}

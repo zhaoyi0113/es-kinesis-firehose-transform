@@ -1,0 +1,84 @@
+{
+  "@timestamp": "2021-08-18T05:53:00.000Z",
+  "aws": {
+    "lambda": {
+      "metrics": {
+        "Duration": {
+          "min": 33.77,
+          "sum": 209.16000000000003,
+          "count": 5,
+          "avg": 41.83200000000001,
+          "max": 53.46
+        },
+        "Throttles": {
+          "avg": 0,
+          "max": 0,
+          "min": 0,
+          "sum": 0,
+          "count": 5
+        },
+        "Errors": {
+          "sum": 0,
+          "count": 5,
+          "avg": 0,
+          "max": 0,
+          "min": 0
+        },
+        "Invocations": {
+          "count": 5,
+          "avg": 1,
+          "max": 1,
+          "min": 1,
+          "sum": 5
+        },
+        "ConcurrentExecutions": {
+          "min": 1,
+          "sum": 5,
+          "count": 5,
+          "avg": 1,
+          "max": 1
+        }
+      }
+    },
+    "cloudwatch": {
+      "namespace": "AWS/Lambda"
+    },
+    "dimensions": {
+      "FunctionName": "dev-crms-engine-api-amsHealthCheck"
+    }
+  },
+  "event": {
+    "dataset": "aws.cloudwatch",
+    "module": "aws",
+    "duration": 419937971884
+  },
+  "metricset": {
+    "name": "cloudwatch",
+    "period": 300000
+  },
+  "service": {
+    "type": "aws"
+  },
+  "host": {
+    "name": "metricbeat-8ccb5cdc5-v9bzg"
+  },
+  "agent": {
+    "id": "33e05c3e-f937-4b6b-9079-2b00112d585f",
+    "name": "metricbeat-8ccb5cdc5-v9bzg",
+    "type": "metricbeat",
+    "version": "7.11.1",
+    "hostname": "metricbeat-8ccb5cdc5-v9bzg",
+    "ephemeral_id": "616927c6-e4a5-48f1-b00a-3b88ad3e4d3d"
+  },
+  "ecs": {
+    "version": "1.7.0"
+  },
+  "cloud": {
+    "region": "ap-southeast-2",
+    "account": {
+      "id": "264100014405",
+      "name": "264100014405"
+    },
+    "provider": "aws"
+  }
+}

@@ -58,7 +58,7 @@ const createIndex = async (esclient, index, type) => {
 }
 
 const processRecords = async (req, res, type) => {
-	console.log('req:', type, req.body.requestId, req.body.timestmap);
+	console.log('req:', type, req, req.body.timestmap);
   const response = { requestId: req.body.requestId, timestamp: req.body.timestamp };
   const today = new Date();
   const index = `aws-${type}-${today.getFullYear()}-${today.getMonth() + 1}-${today.getDate()}`;
