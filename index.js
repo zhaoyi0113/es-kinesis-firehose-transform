@@ -3,6 +3,7 @@ const bodyParser = require('body-parser');
 const cors = require('cors');
 const zlib = require('zlib');
 const { Client } = require('@elastic/elasticsearch');
+const { convertMetric } = require('./metricsConverter');
 
 const ES_ENDPOINT = 'http://es-entrypoint:9200';
 
@@ -21,23 +22,22 @@ app.use(
 app.use(bodyParser.json({ limit: '50mb' }));
 
 const formatLogMessage = (log) => {
-  let message = {'@message': ''};
+  let message = { '@message': '' };
   if (log.message) {
-    try{
+    try {
       message = JSON.parse(log.message);
-    }catch(err){
-      message = {'@message': log.message}
+    } catch (err) {
+      message = { '@message': log.message };
     }
   }
   return message;
-}
+};
 
 const createIndex = async (esclient, index, type) => {
   try {
     const { body } = await esclient.indices.exists({
       index,
     });
-    console.log('index exists:', body);
     if (!body) {
       console.log('create index ', index);
       await esclient.indices.create({
@@ -45,7 +45,7 @@ const createIndex = async (esclient, index, type) => {
       });
       const mappingProps = { timestamp: { type: 'date' } };
       if (type === 'logs') {
-        mappingProps.logGroup = {type: 'text', fielddata: true}
+        mappingProps.logGroup = { type: 'text', fielddata: true };
       }
       await esclient.indices.putMapping({
         index,
@@ -55,10 +55,10 @@ const createIndex = async (esclient, index, type) => {
   } catch (err) {
     console.error('create index error:', err);
   }
-}
+};
 
 const processRecords = async (req, res, type) => {
-	console.log('req:', type, req, req.body.timestmap);
+  // console.log('req:', type, req.body, req.body.timestmap);
   const response = { requestId: req.body.requestId, timestamp: req.body.timestamp };
   const today = new Date();
   const index = `aws-${type}-${today.getFullYear()}-${today.getMonth() + 1}-${today.getDate()}`;
@@ -84,27 +84,28 @@ const processRecords = async (req, res, type) => {
               records.push({ index: { _index: index } });
               records.push({ ...j, ...log, ...message });
             });
-          } else {
-            records.push({ index: { _index: index } });
-            records.push(j);
+          } else if (type === 'metrics') {
+            const mRecord = convertMetric(j);
+            if (mRecord) {
+              records.push({ index: { _index: index } });
+              records.push(mRecord);
+            }
           }
         }
       } catch (err) {
+        console.error(err);
         console.error('failed to decode record.', d);
       }
     });
   });
 
   if (records.length === 0) {
-    console.log('record lenght is 0');
     res.json(response);
     return;
   }
 
   await createIndex(esclient, index, type);
   try {
-    console.log('send ', records.length, ' documents.');
-    console.log('records:', records[0], records[1]);
     await esclient.bulk({
       index,
       body: records,
@@ -117,7 +118,6 @@ const processRecords = async (req, res, type) => {
     'X-Amz-Firehose-Request-Id': req.requestId,
     'Content-Type': 'application/json',
   });
-  console.log('response:', response);
   res.json(response);
 };
 
