@@ -5,7 +5,7 @@ const zlib = require('zlib');
 const { Client } = require('@elastic/elasticsearch');
 const { convertMetric } = require('./metricsConverter');
 
-const ES_ENDPOINT = 'http://es-entrypoint:9200';
+const ES_ENDPOINT = process.env.ES_HOST || 'http://elk-es-http:9200';
 
 const esclient = new Client({
   node: ES_ENDPOINT,
