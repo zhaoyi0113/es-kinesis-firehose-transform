@@ -6,9 +6,15 @@ const { Client } = require('@elastic/elasticsearch');
 const { convertMetric } = require('./metricsConverter');
 
 const ES_ENDPOINT = process.env.ES_HOST || 'http://elk-es-http:9200';
+const ES_USER_NAME = process.env.ES_USER_NAME || 'elastic';
+const ES_PWD = process.env.ES_PWD;
 
 const esclient = new Client({
   node: ES_ENDPOINT,
+  auth: {
+    username: ES_USER_NAME,
+    password: ES_PWD,
+  }
 });
 let app = express();
 
