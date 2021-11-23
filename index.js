@@ -5,16 +5,18 @@ const zlib = require('zlib');
 const { Client } = require('@elastic/elasticsearch');
 const { convertMetric } = require('./metricsConverter');
 
-const ES_ENDPOINT = process.env.ES_HOST || 'http://elk-es-http:9200';
-const ES_USER_NAME = process.env.ES_USER_NAME || 'elastic';
+const ES_ENDPOINT = process.env.ES_HOST; // || 'http://elk-es-http:9200';
+const ES_USER_NAME = process.env.ES_USER_NAME;
 const ES_PWD = process.env.ES_PWD;
 
 const esclient = new Client({
   node: ES_ENDPOINT,
-  auth: {
-    username: ES_USER_NAME,
-    password: ES_PWD,
-  }
+  auth: ES_USER_NAME
+    ? {
+        username: ES_USER_NAME,
+        password: ES_PWD,
+      }
+    : undefined,
 });
 let app = express();
 
@@ -23,7 +25,7 @@ const port = 8080;
 app.use(
   bodyParser.urlencoded({
     extended: true,
-  }),
+  })
 );
 app.use(bodyParser.json({ limit: '50mb' }));
 
@@ -63,11 +65,20 @@ const createIndex = async (esclient, index, type) => {
   }
 };
 
+const formatNumber = (num, len = 2) => {
+  return `${num}`.padStart(len, '0');
+};
+
 const processRecords = async (req, res, type) => {
-  // console.log('req:', type, req.body, req.body.timestmap);
-  const response = { requestId: req.body.requestId, timestamp: req.body.timestamp };
+  console.log('req:', type, req.body.timestamp);
+  const response = {
+    requestId: req.body.requestId,
+    timestamp: req.body.timestamp,
+  };
   const today = new Date();
-  const index = `aws-${type}-${today.getFullYear()}-${today.getMonth() + 1}-${today.getDate()}`;
+  const index = `aws-${type}-${today.getFullYear()}-${formatNumber(
+    today.getMonth() + 1
+  )}-${formatNumber(today.getDate())}`;
 
   const records = [];
   req.body.records.forEach((record) => {
@@ -75,7 +86,9 @@ const processRecords = async (req, res, type) => {
     if (type === 'metrics') {
       str = Buffer.from(record.data, 'base64').toString('utf-8');
     } else if (type === 'logs') {
-      str = zlib.unzipSync(Buffer.from(record.data, 'base64')).toString('utf-8');
+      str = zlib
+        .unzipSync(Buffer.from(record.data, 'base64'))
+        .toString('utf-8');
     }
     str.split('\n').forEach((d) => {
       try {
