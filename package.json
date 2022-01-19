@@ -4,14 +4,19 @@
   "main": "index.js",
   "license": "MIT",
   "scripts": {
-    "build:image": "docker build -t zhaoyi0113/es-kinesis-firehose-transform .",
-    "publish:image": "docker push zhaoyi0113/es-kinesis-firehose-transform"
+    "build:image": "docker build --platform=linux/amd64 -t zhaoyi0113/es-kinesis-firehose-transform .",
+    "publish:image": "docker push zhaoyi0113/es-kinesis-firehose-transform",
+    "start:es": "docker-compose up -d",
+    "test": "jest"
   },
   "dependencies": {
     "@elastic/elasticsearch": "^7.13.0",
-    "axios": "^0.21.1",
+    "axios": "^0.25.0",
     "body-parser": "^1.19.0",
     "cors": "^2.8.5",
     "express": "^4.17.1"
+  },
+  "devDependencies": {
+    "jest": "^27.4.7"
   }
 }

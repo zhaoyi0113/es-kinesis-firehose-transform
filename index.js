@@ -5,9 +5,10 @@ const zlib = require('zlib');
 const { Client } = require('@elastic/elasticsearch');
 const { convertMetric } = require('./metricsConverter');
 
-const ES_ENDPOINT = process.env.ES_HOST; // || 'http://elk-es-http:9200';
+const ES_ENDPOINT = process.env.ES_HOST || 'http://localhost:9200';
 const ES_USER_NAME = process.env.ES_USER_NAME;
 const ES_PWD = process.env.ES_PWD;
+const INDEX_RETENTION_POLICY = process.env.INDEX_RETENTION_POLICY || 'index-retention-policy';
 
 const esclient = new Client({
   node: ES_ENDPOINT,
@@ -50,6 +51,11 @@ const createIndex = async (esclient, index, type) => {
       console.log('create index ', index);
       await esclient.indices.create({
         index,
+        body: {
+          settings: {
+            'lifecycle.name': INDEX_RETENTION_POLICY,
+          },
+        },
       });
       const mappingProps = { timestamp: { type: 'date' } };
       if (type === 'logs') {
@@ -69,16 +75,17 @@ const formatNumber = (num, len = 2) => {
   return `${num}`.padStart(len, '0');
 };
 
+const getIndexName = (type) => {
+  const today = new Date();
+  return `aws-${type}-${today.getFullYear()}-${formatNumber(today.getMonth() + 1)}-${formatNumber(today.getDate())}`;
+};
+
 const processRecords = async (req, res, type) => {
-  console.log('req:', type, req.body.timestamp);
   const response = {
     requestId: req.body.requestId,
     timestamp: req.body.timestamp,
   };
-  const today = new Date();
-  const index = `aws-${type}-${today.getFullYear()}-${formatNumber(
-    today.getMonth() + 1
-  )}-${formatNumber(today.getDate())}`;
+  const index = getIndexName(type);
 
   const records = [];
   req.body.records.forEach((record) => {
@@ -86,9 +93,8 @@ const processRecords = async (req, res, type) => {
     if (type === 'metrics') {
       str = Buffer.from(record.data, 'base64').toString('utf-8');
     } else if (type === 'logs') {
-      str = zlib
-        .unzipSync(Buffer.from(record.data, 'base64'))
-        .toString('utf-8');
+      console.log('log record:', record.data);
+      str = zlib.unzipSync(Buffer.from(record.data, 'base64')).toString('utf-8');
     }
     str.split('\n').forEach((d) => {
       try {
@@ -144,6 +150,12 @@ app.post('/logs', cors(), (req, res) => processRecords(req, res, 'logs'));
 
 app.post('/metrics', cors(), (req, res) => processRecords(req, res, 'metrics'));
 
-app.listen(port, '0.0.0.0', () => {
+const server = app.listen(port, '0.0.0.0', () => {
   console.log(`CORS-enabled web server listening on port ${port}`);
 });
+
+module.exports = {
+  server,
+  esclient,
+  getIndexName,
+};
