@@ -34,7 +34,11 @@ const formatLogMessage = (log) => {
   let message = { '@message': '' };
   if (log.message) {
     try {
-      message = JSON.parse(log.message);
+      const jsonMsg = JSON.parse(log.message);
+      if (jsonMsg['@message']) {
+        jsonMsg['@message'] = JSON.stringify(jsonMsg['@message']);
+      }
+      message = jsonMsg;
     } catch (err) {
       message = { '@message': log.message };
     }
